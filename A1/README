@@ -1,0 +1,42 @@
+CS 456 Assignment 1
+By Utkarsh Sharma
+ID: 20467764
+
+The following commands demonstrate the java version and make command. The current Makefile is required for
+the make file to execute.
+
+> java -version
+openjdk version "9-internal"
+OpenJDK Runtime Environment (build 9-internal+0-2016-04-14-195246.buildd.src)
+OpenJDK 64-Bit Server VM (build 9-internal+0-2016-04-14-195246.buildd.src, mixed mode)
+
+> make
+rm -f client.class server.class
+javac client.java server.java
+
+
+This program is executed in the school linux.cs.uwaterloo.ca environment. In order to execute the server, simply use the following command:
+
+> ./server.sh <req_code>
+
+Here, <req_code> is the integer code required by the client in order to reverse a string. A lack of this code, or it being in a non-integer format, will result in an error. Note that any additional provided parameter will be ignored.
+
+In order to execute the client, simply use the following command:
+
+> ./client <server_addr> <n_port> <req_code> <string>
+
+In order for this command to work:
+- server_addr, n_port and req_code must be provided.
+- n_port and req_code must be integers
+
+Note that any additional provided parameter will be ignored.
+Executing the server correctly will result in a n_port printed out, which must be used here in order to communicate to it. 
+The appropriate req_code must also be provided for the server to authenticate the request.
+Note that a lack of string paramter will be assumed as an empty string, and will be treated as such.
+
+
+Upon server receiving a request to reverse a string, it prints out the TCP_PORT on which the string is sent, along with the string sent to it.
+The client will receive a reversed string, which it prints and exits.
+
+Note that an incorrect req_code will result in no action, and so the client socket will time out.
+
