@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.nio.ByteBuffer;
 
 public class Packet implements Serializable {
     
@@ -17,7 +18,7 @@ public class Packet implements Serializable {
         this.packetType = packetType;
         this.seqNumber = seqNumber;
         this.payload = msg;
-        this.packetLength = this.payload.length + 3;
+        this.packetLength = this.payload.length + 12;
         
     }
     
@@ -25,7 +26,7 @@ public class Packet implements Serializable {
         return new Packet(1, seq, new byte[0]);
     }
     
-    public static Packet EOF(int seq){
+    public static Packet EOT(int seq){
         return new Packet(2, seq, new byte[0]);
     }
     
@@ -34,20 +35,24 @@ public class Packet implements Serializable {
     }
     
     public static Packet DECODE(byte[] pktbyte) throws IOException, ClassNotFoundException{
-        ObjectInput input = new ObjectInputStream(new ByteArrayInputStream(pktbyte));
-        Packet pkt = (Packet) input.readObject();
-        input.close();
-        return pkt;
+        ByteBuffer buffer = ByteBuffer.wrap(pktbyte);
+        int pktType = buffer.getInt();
+        int pktLen = buffer.getInt();
+        int seqNum = buffer.getInt();
+        byte payload[] = new byte[pktLen-12];
+        buffer.get(payload, 0, pktLen-12);
+        return new Packet(pktType, seqNum, payload);
+        
     }
     
     public static byte[] ENCODE(Packet pkt) throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ObjectOutput output = new ObjectOutputStream(stream);
-        output.writeObject(pkt);
-        output.flush();
-        byte[] pktbyte = stream.toByteArray();
-        stream.close();
-        return pktbyte;
+        ByteBuffer buffer = ByteBuffer.allocate(pkt.getPacketLength()); // max 500 bytes for payload, 4 bytes for header
+        buffer.putInt(pkt.getPacketType());
+        buffer.putInt(pkt.getPacketLength());
+        buffer.putInt(pkt.getSeqNumber());
+        buffer.put(pkt.getPayload(), 0, pkt.getPayload().length);
+        return buffer.array();
+        
     }
     
     public int getPacketType() {
@@ -58,6 +63,11 @@ public class Packet implements Serializable {
         return seqNumber;
     }
     
+    
+    public void setSeqNumber(int seqNumber) {
+        this.seqNumber = seqNumber;
+    }
+    
     public byte[] getPayload() {
         return payload;
     }
@@ -65,5 +75,6 @@ public class Packet implements Serializable {
     public int getPacketLength() {
         return packetLength;
     }
+    
 }
 
