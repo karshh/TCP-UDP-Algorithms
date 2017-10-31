@@ -1,0 +1,41 @@
+CS456 Assignment 2
+By: Utkarsh Sharma
+ID: 20467764
+
+This assignment demonstrated packet transfer through an unreliable channel using GBN and SR protocols.
+
+So far, I have tested my code with the provided files, and they have worked with it, with the diff showing no difference.
+
+Moreover, I have tested my code through ssh'ing into linux. So far, the machines I've tried it on are ubuntu1604-002, ubuntu1604-006, ubuntu1604-008, but it should
+work for other ubuntu machines within the school server.
+ 
+NOTABLE FILES
+ 
+Packet.java  
+        This file contains the implementation of a packet, as described in the assignment doc. Moreover, it creates and encodes/decodes packets statically.
+ 
+PacketStorage.java
+        This file contains the implemenation of PacketStorage, which takes in a filename as a parameter, splits it up into packets and stores them in order.
+        Whenever a packet is requested it deletes the next packet in queue and sends it.
+           
+Sender.java
+        Sender is implemented in it. When GBN is requested, then a single thread takes the responsibility of sending all the packets. However, with SR, SendThreads
+        are spawned which send packets and time themselves out, sending packets again when they wake up unless they are interrupted.
+
+Receiver.java
+	Receiver is implemented in it. When GBN is requested, then cumulative acks are sent, with the packets acknowleged being added to a list. The cumulative properties
+	ensure that this list is ordered, and hence the payloads in it are written sequentially. However, when SR is requested, we run into 2 problems.
+	1. Unordered packets.
+	2. Duplicates.
+	To solve problem 2 with considerably less time cost than iterating through all packets received, we introduce a cache that holds 25 recent unique packets received.
+	If a duplicate packet arrives then it will be compared with this cache, and if its found to be duplicate, discarded. Since the window is of size 10, it should be caught.
+	To solve problem 1, we take into consideration that since the window is of size 10 in a mod 256, packet sequences must be spacially close to each other. This means we can
+	sort out the list by grabbing the first occurence of each sequence and being assured that it occured being another packet of identical sequence after a mod wraparound.
+
+Sender
+	A bash script that executes Sender
+
+Receiver
+	A bash script that executes receiver
+
+

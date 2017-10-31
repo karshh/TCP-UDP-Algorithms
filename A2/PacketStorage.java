@@ -1,4 +1,8 @@
 
+/**
+ *
+ * @author karsh
+ */
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/*
+    The purpose of this class is to parse a file, break it up into packets and 
+    store them in order. Those packets are then retreived and sent in the order it
+    is stored here.
+*/
 
 public class PacketStorage {
     private List<Packet> packetList = new ArrayList<Packet>();
