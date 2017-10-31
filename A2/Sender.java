@@ -271,7 +271,10 @@ public class Sender {
                     }
                 }
                 
-                if (startIndex >= endIndex) break; // we have completed sending packets. Break out.
+                if (startIndex > endIndex) {
+                    
+                    break;
+                } // we have completed sending packets. Break out.
                 
                 
             }
