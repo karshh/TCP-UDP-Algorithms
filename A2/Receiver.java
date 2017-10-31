@@ -126,7 +126,6 @@ public class Receiver {
                 if (packetCache.size() > 25) packetCache.remove(0);
                 packetCache.add(p);
                 packetList.add(p);
-                System.out.println("Added packet to packetList [size:" + packetList.size() + "]");
                 
             }
             
