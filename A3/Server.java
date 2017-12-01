@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
 
 public class Server {
     
-    static boolean DEBUG = true;
+    static boolean DEBUG = false;
     
     protected static class TransferThread extends Thread {
         
